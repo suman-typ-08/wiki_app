@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .mainCnt {
+            padding: 2rem;
+            height: fit-content;
+            width: 90%;
+            margin: auto;
+        }
+
+        .up,
+        .down {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+
+        }
+
+        .up img {
+            height: 10rem;
+            animation: rotateY 4s linear infinite;
+            transform-style: preserve-3d;
+        }
+
+        @keyframes rotateY {
+            from {
+                transform: rotateY(0deg);
+            }
+
+            to {
+                transform: rotateY(360deg);
+            }
+        }
+
+        .up input {
+            width: 30%;
+            height: 35px;
+            min-width: 250px;
+            padding-left: 10px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+            background-color: #efefef;
+            margin-bottom: 2rem;
+            transition: all 1s linear;
+        }
+
+        .up input:focus {
+            border: 1px solid grey;
+            width: 35%;
+        }
+
+        ::placeholder {
+            color: rgb(10, 10, 12);
+            font-weight: 550;
+        }
+
+        .card {
+            margin-bottom: 2rem;
+        }
+
+        .card .title {
+            text-decoration: none;
+        }
+
+        .link {
+            text-decoration: none;
+            font-weight: 400;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+
+        .desc {
+            color: rgb(10, 10, 12);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mainCnt">
+        <div class="up">
+            <img src="https://free3d.com/imgd/raw95/5f8949d1223f63266431eee2/4405-earth.png"
+                alt="">
+            <input type="search" placeholder="what's in Your Mind . . . 👩‍💻👩‍💻" id="searchInput">
+        </div>
+        <div id="down"></div>
+    </div>
+
+
+
+
+
+
+    <script>
+        let searchInput = document.getElementById("searchInput")
+        let down = document.getElementById("down")
+        searchInput.addEventListener("change", (event) => {
+            console.log(event.target.value)
+            let city = event.target.value;
+            fetchData(`https://apis.ccbp.in/wiki-search?search=${city}`)
+        })
+
+        async function fetchData(url) {
+            let response = await fetch(url)
+            console.log(response.status)
+            try {
+                if (response.status === 200) {
+                    let data = await response.json()
+                    DisplayData(data.search_results)
+                }
+            } catch (error) {
+                console.error(error.message)
+            }
+        }
+
+        function DisplayData(array_data) {
+            let input = ""
+            array_data.map((val) => {
+                console.log(val)
+                let title = val.title;
+                let link = val.link;
+                let para = val.description;
+                input = input + `
+            <div class="card"> 
+                 <a  class="title" href=${link} target="_blank"> <h2>${title}</h2></a>
+                 <a  class="link" href=${link} target="_blank">${link}</a>
+                  <P class="desc">${para}</p>
+            </div>
+            
+           `
+            })
+            down.innerHTML = input;
+        }
+
+    </script>
+</body>
+
+</html>
